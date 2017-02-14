@@ -22,18 +22,18 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Tests for the {@link SafeRefLock} class.
+ * Tests for the {@link SafeSharedReference} class.
  *
  * @author Brandon Arp (brandon dot arp at inscopemetrics dot com)
  */
-public class SafeRefLockTest {
+public class SafeSharedReferenceTest {
 
     @Test
     public void testMultipleReadersOk() throws InterruptedException {
         final Semaphore waitForBoth = new Semaphore(0);
         final Semaphore releaseBoth = new Semaphore(0);
         final Object testObject = new Object();
-        final SafeRefLock<Object> refLock = new SafeRefLock<>(testObject);
+        final SafeSharedReference<Object> refLock = new SafeSharedReference<>(testObject);
 
         final Runnable r = () -> {
             refLock.readLocked((object) -> {
@@ -60,7 +60,7 @@ public class SafeRefLockTest {
         final Semaphore done = new Semaphore(0);
 
         final Object testObject = new Object();
-        final SafeRefLock<Object> refLock = new SafeRefLock<>(testObject);
+        final SafeSharedReference<Object> refLock = new SafeSharedReference<>(testObject);
 
         final Runnable r = () -> {
             waitForEntry.release();
@@ -95,7 +95,7 @@ public class SafeRefLockTest {
     @Test
     public void testReleasesLockOnThrow() throws InterruptedException {
         final Object testObject = new Object();
-        final SafeRefLock<Object> refLock = new SafeRefLock<>(testObject);
+        final SafeSharedReference<Object> refLock = new SafeSharedReference<>(testObject);
 
         final Semaphore waitForEntry = new Semaphore(0);
         final Semaphore done = new Semaphore(0);
@@ -121,7 +121,7 @@ public class SafeRefLockTest {
 
         final Object testObject = new Object();
         final Object newTestObject = new Object();
-        final SafeRefLock<Object> refLock = new SafeRefLock<>(testObject);
+        final SafeSharedReference<Object> refLock = new SafeSharedReference<>(testObject);
 
         final Runnable r = () -> {
             refLock.readLocked((object) -> {

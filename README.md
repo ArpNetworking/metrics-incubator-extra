@@ -1,4 +1,4 @@
-Metrics Client Apache HTTP Sink
+Metrics Client Incubator
 ===============================
 
 <a href="https://raw.githubusercontent.com/ArpNetworking/metrics-incubator-extra/master/LICENSE">
@@ -18,9 +18,10 @@ Metrics Client Apache HTTP Sink
          alt="Javadocs">
 </a>
 
-An incubator library for functionality that will eventually be in the core metrics client.  The interfaces exposed by this 
-library should be considered unstable may change from release to release.  The functionality contained within is experimental
-but the focus is on eventualy bringing this functionality into the core metrics library and freezing the interfaces.
+An incubator library for functionality that will eventually be in the core metrics client  or in independent formally 
+defined extras.  The interfaces exposed by this library should be considered unstable may change from release to 
+release.  The functionality contained within is experimental but the focus is on eventualy bringing this functionality 
+into the core metrics libraries and freezing the interfaces.
 
 Usage
 -----

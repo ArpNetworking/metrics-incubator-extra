@@ -30,13 +30,13 @@ import java.util.function.Consumer;
  *
  * @author Brandon Arp (brandon dot arp at inscopemetrics dot com)
  */
-public class SafeRefLock<T> {
+public final class SafeSharedReference<T> {
     /**
      * Public constructor.
      *
      * @param initialValue the initial value of the held reference
      */
-    public SafeRefLock(final T initialValue) {
+    public SafeSharedReference(final T initialValue) {
         _reference = new AtomicReference<>(initialValue);
         _lock = new ReentrantReadWriteLock(false);
     }

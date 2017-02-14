@@ -26,6 +26,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+
 /**
  * Tests for the {@link TsdPeriodicMetricsFactory} class.
  *
@@ -43,9 +45,22 @@ public class TsdPeriodicMetricsFactoryTest {
         final Logger logger = Mockito.mock(Logger.class);
         final TsdPeriodicMetricsFactory factory = new TsdPeriodicMetricsFactory.Builder(logger)
                 .setMetricsFactory(null)
+                .setCloseExecutor(new ScheduledThreadPoolExecutor(1))
                 .build();
         Mockito.verify(logger).warn(Mockito.anyString());
     }
+
+    @Test
+    @SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
+    public void testWarnsOnNullExecutor() throws Exception {
+        final Logger logger = Mockito.mock(Logger.class);
+        final TsdPeriodicMetricsFactory factory = new TsdPeriodicMetricsFactory.Builder(logger)
+                .setMetricsFactory(_factory)
+                .setCloseExecutor(null)
+                .build();
+        Mockito.verify(logger).warn(Mockito.anyString());
+    }
+
     @Test
     public void testCallsFactoryCreateForInitialMetricInstance() throws Exception {
         final TsdPeriodicMetricsFactory factory = new TsdPeriodicMetricsFactory.Builder()

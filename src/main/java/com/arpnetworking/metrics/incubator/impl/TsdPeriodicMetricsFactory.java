@@ -35,10 +35,12 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 import javax.annotation.Nullable;
 
 /**
+ * Implementation of a {@link PeriodicMetricsFactory} backed by a {@link TsdMetricsFactory}.
+ *
  * @author Brandon Arp (brandon dot arp at inscopemetrics dot com)
  */
 public final class TsdPeriodicMetricsFactory implements PeriodicMetricsFactory {
@@ -72,15 +74,16 @@ public final class TsdPeriodicMetricsFactory implements PeriodicMetricsFactory {
 
     private TsdPeriodicMetricsFactory(final Builder builder) {
         _metricsFactory = builder._metricsFactory;
+        _closingExecutor = builder._closeExecutor;
 
-        _currentPeriodicMetrics = new SafeRefLock<>(_metricsFactory.create());
+        _currentPeriodicMetrics = new SafeSharedReference<>(_metricsFactory.create());
 
         _closingExecutor.scheduleAtFixedRate(this::cyclePeriodMetrics, 500, 500, TimeUnit.MILLISECONDS);
     }
 
     private final MetricsFactory _metricsFactory;
-    private final SafeRefLock<Metrics> _currentPeriodicMetrics;
-    private final ScheduledExecutorService _closingExecutor = new ScheduledThreadPoolExecutor(1, (r) -> new Thread(r, "MetricsCloser"));
+    private final SafeSharedReference<Metrics> _currentPeriodicMetrics;
+    private final ScheduledExecutorService _closingExecutor;
     private final Set<Consumer<Metrics>> _polledMetricsRegistrations = ConcurrentHashMap.newKeySet();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TsdPeriodicMetricsFactory.class);
@@ -99,7 +102,7 @@ public final class TsdPeriodicMetricsFactory implements PeriodicMetricsFactory {
         }
 
         // NOTE: Package private for testing
-        /* package private */ Builder(@Nullable final Logger logger) {
+        /* package private */ Builder(final Logger logger) {
             _logger = logger;
         }
 
@@ -111,6 +114,17 @@ public final class TsdPeriodicMetricsFactory implements PeriodicMetricsFactory {
          */
         public Builder setMetricsFactory(final MetricsFactory value) {
             _metricsFactory = value;
+            return this;
+        }
+
+        /**
+         * Sets the executor where the polled metrics collection and metrics recording will be executed.  Cannot be null.
+         *
+         * @param value The metrics factory.
+         * @return This instance of {@link Builder}.
+         */
+        public Builder setCloseExecutor(final ScheduledExecutorService value) {
+            _closeExecutor = value;
             return this;
         }
 
@@ -127,11 +141,21 @@ public final class TsdPeriodicMetricsFactory implements PeriodicMetricsFactory {
                 _logger.warn(String.format("Defaulted null metrics factory; metricsFactory=%s", _metricsFactory));
             }
 
+            if (_closeExecutor == null) {
+                _closeExecutor = DEFAULT_EXECUTOR_SUPPLIER.get();
+                _logger.warn(String.format("Defaulted null close executor; closeExecutor=%s", _closeExecutor));
+            }
+
             return new TsdPeriodicMetricsFactory(this);
         }
         private MetricsFactory _metricsFactory;
+        private ScheduledExecutorService _closeExecutor;
 
         private final Logger _logger;
+
+
+        private static final Supplier<ScheduledExecutorService> DEFAULT_EXECUTOR_SUPPLIER =
+                () -> new ScheduledThreadPoolExecutor(1, (r) -> new Thread(r, "TsdPeriodicMetricsFactoryCloser"));
     }
 
     /* package private */ static final class NonClosingMetrics implements Metrics {
@@ -139,107 +163,170 @@ public final class TsdPeriodicMetricsFactory implements PeriodicMetricsFactory {
             this._wrapped = wrapped;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public Counter createCounter(@Nonnull final String name) {
+        public Counter createCounter(final String name) {
             return _wrapped.createCounter(name);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public void incrementCounter(@Nonnull final String name) {
+        public void incrementCounter(final String name) {
             _wrapped.incrementCounter(name);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public void incrementCounter(@Nonnull final String name, final long value) {
+        public void incrementCounter(final String name, final long value) {
             _wrapped.incrementCounter(name, value);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public void decrementCounter(@Nonnull final String name) {
+        public void decrementCounter(final String name) {
             _wrapped.decrementCounter(name);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public void decrementCounter(@Nonnull final String name, final long value) {
+        public void decrementCounter(final String name, final long value) {
             _wrapped.decrementCounter(name, value);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public void resetCounter(@Nonnull final String name) {
+        public void resetCounter(final String name) {
             _wrapped.resetCounter(name);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public Timer createTimer(@Nonnull final String name) {
+        public Timer createTimer(final String name) {
             return _wrapped.createTimer(name);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public void startTimer(@Nonnull final String name) {
+        public void startTimer(final String name) {
             _wrapped.startTimer(name);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public void stopTimer(@Nonnull final String name) {
+        public void stopTimer(final String name) {
             _wrapped.stopTimer(name);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public void setTimer(@Nonnull final String name, final long duration, @Nullable final TimeUnit unit) {
+        public void setTimer(final String name, final long duration, @Nullable final TimeUnit unit) {
             _wrapped.setTimer(name, duration, unit);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public void setTimer(@Nonnull final String name, final long duration, @Nullable final Unit unit) {
+        public void setTimer(final String name, final long duration, @Nullable final Unit unit) {
             _wrapped.setTimer(name, duration, unit);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public void setGauge(@Nonnull final String name, final double value) {
+        public void setGauge(final String name, final double value) {
             _wrapped.setGauge(name, value);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public void setGauge(@Nonnull final String name, final double value, @Nullable final Unit unit) {
+        public void setGauge(final String name, final double value, @Nullable final Unit unit) {
             _wrapped.setGauge(name, value, unit);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public void setGauge(@Nonnull final String name, final long value) {
+        public void setGauge(final String name, final long value) {
             _wrapped.setGauge(name, value);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public void setGauge(@Nonnull final String name, final long value, @Nullable final Unit unit) {
+        public void setGauge(final String name, final long value, @Nullable final Unit unit) {
             _wrapped.setGauge(name, value, unit);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public void addAnnotation(@Nonnull final String key, @Nonnull final String value) {
+        public void addAnnotation(final String key, final String value) {
             _wrapped.addAnnotation(key, value);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public void addAnnotations(@Nonnull final Map<String, String> map) {
+        public void addAnnotations(final Map<String, String> map) {
             _wrapped.addAnnotations(map);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public boolean isOpen() {
             return _wrapped.isOpen();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void close() {
             // Don't do anything. We don't want this instance to be closeable.
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         @Nullable
         public Instant getOpenTime() {
             return _wrapped.getOpenTime();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         @Nullable
         public Instant getCloseTime() {

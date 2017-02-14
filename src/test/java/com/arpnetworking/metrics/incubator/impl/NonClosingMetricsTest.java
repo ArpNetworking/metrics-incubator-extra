@@ -31,6 +31,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Tests for the {@link NonClosingMetrics} class.
+ *
  * @author Brandon Arp (brandon dot arp at inscopemetrics dot com)
  */
 public class NonClosingMetricsTest {
