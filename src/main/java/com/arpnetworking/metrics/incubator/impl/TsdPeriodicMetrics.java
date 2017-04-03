@@ -43,65 +43,41 @@ import java.util.function.Supplier;
  * @author Brandon Arp (brandon dot arp at inscopemetrics dot com)
  */
 public final class TsdPeriodicMetrics implements PeriodicMetrics, Runnable {
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void registerPolledMetric(final Consumer<PeriodicMetrics> consumer) {
         _polledMetricsRegistrations.add(consumer);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void recordCounter(final String name, final long value) {
         _currentPeriodicMetrics.readLocked(m -> m.createCounter(name).increment(value));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void recordTimer(final String name, final long duration, final Optional<Unit> unit) {
         _currentPeriodicMetrics.readLocked(m -> m.setTimer(name, duration, unit.orElse(null)));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void recordGauge(final String name, final double value) {
         _currentPeriodicMetrics.readLocked(m -> m.setGauge(name, value));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void recordGauge(final String name, final double value, final Optional<Unit> unit) {
         _currentPeriodicMetrics.readLocked(m -> m.setGauge(name, value, unit.orElse(null)));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void recordGauge(final String name, final long value) {
         _currentPeriodicMetrics.readLocked(m -> m.setGauge(name, value));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void recordGauge(final String name, final long value, final Optional<Unit> unit) {
         _currentPeriodicMetrics.readLocked(m -> m.setGauge(name, value, unit.orElse(null)));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void run() {
         cyclePeriodMetrics();
@@ -175,9 +151,6 @@ public final class TsdPeriodicMetrics implements PeriodicMetrics, Runnable {
             return this;
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public TsdPeriodicMetrics build() {
             // Defaults
