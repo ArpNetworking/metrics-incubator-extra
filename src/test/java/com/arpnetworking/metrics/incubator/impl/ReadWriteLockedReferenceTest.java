@@ -35,7 +35,7 @@ public class ReadWriteLockedReferenceTest {
         final Object testObject = new Object();
         final ReadWriteLockedReference<Object> refLock = new ReadWriteLockedReference<>(testObject);
 
-        final Runnable r = () -> refLock.readLocked((object) -> {
+        final Runnable r = () -> refLock.readLocked(object -> {
             waitForBoth.release();
             try {
                 releaseBoth.acquire();
@@ -62,12 +62,12 @@ public class ReadWriteLockedReferenceTest {
 
         final Runnable r = () -> {
             waitForEntry.release();
-            refLock.writeLocked((object) -> {
+            refLock.writeLocked(object -> {
                 done.release();
             });
         };
 
-        refLock.writeLocked((object) -> {
+        refLock.writeLocked(object -> {
             final Thread thread1 = new Thread(r);
             thread1.start();
 
@@ -98,7 +98,7 @@ public class ReadWriteLockedReferenceTest {
         final Semaphore waitForEntry = new Semaphore(0);
 
         final Runnable r = () -> {
-            refLock.writeLocked((object) -> {
+            refLock.writeLocked(object -> {
                 waitForEntry.release();
                 throw new RuntimeException();
             });
@@ -108,7 +108,7 @@ public class ReadWriteLockedReferenceTest {
         thread1.start();
 
         waitForEntry.acquire();
-        refLock.writeLocked((object) -> { });
+        refLock.writeLocked(object -> { });
         // If we get here, success
     }
 
@@ -121,7 +121,7 @@ public class ReadWriteLockedReferenceTest {
         final ReadWriteLockedReference<Object> refLock = new ReadWriteLockedReference<>(testObject);
 
         final Runnable r = () -> {
-            refLock.readLocked((object) -> {
+            refLock.readLocked(object -> {
                 waitForEntry.release();
                 try {
                     Thread.sleep(500);

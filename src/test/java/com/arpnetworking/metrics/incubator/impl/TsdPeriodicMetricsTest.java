@@ -168,7 +168,7 @@ public class TsdPeriodicMetricsTest {
         final Metrics metricsMock = Mockito.mock(Metrics.class);
         final Metrics newMetricsMock = Mockito.mock(Metrics.class);
         Mockito.when(_factory.create()).thenReturn(metricsMock, newMetricsMock);
-        Mockito.when(metricsMock.createCounter(Mockito.anyString())).thenAnswer(Answers.RETURNS_MOCKS.get());
+        Mockito.when(metricsMock.createCounter(Mockito.anyString())).thenAnswer(Answers.RETURNS_MOCKS);
         final TsdPeriodicMetrics factory = new TsdPeriodicMetrics.Builder()
                 .setMetricsFactory(_factory)
                 .build();
