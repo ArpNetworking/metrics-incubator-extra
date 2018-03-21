@@ -167,7 +167,7 @@ public final class TsdPeriodicMetrics implements PeriodicMetrics, Runnable {
             return new TsdPeriodicMetrics(this);
         }
         private MetricsFactory _metricsFactory;
-        private ExecutorService _pollingExecutor = DEFAULT_POLLING_EXECUTOR_SUPPLIER.get();
+        private Executor _pollingExecutor = DEFAULT_POLLING_EXECUTOR_SUPPLIER.get();
 
         private final Logger _logger;
 
