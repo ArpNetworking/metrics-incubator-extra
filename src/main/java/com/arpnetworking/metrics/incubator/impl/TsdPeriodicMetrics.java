@@ -171,6 +171,6 @@ public final class TsdPeriodicMetrics implements PeriodicMetrics, Runnable {
 
         private final Logger _logger;
 
-        private static final Supplier<ExecutorService> DEFAULT_POLLING_EXECUTOR_SUPPLIER = MoreExecutors::newDirectExecutorService;
+        private static final Supplier<Executor> DEFAULT_POLLING_EXECUTOR_SUPPLIER = MoreExecutors::directExecutor;
     }
 }
