@@ -146,7 +146,7 @@ public final class TsdPeriodicMetrics implements PeriodicMetrics, Runnable {
          * @param value The metrics factory.
          * @return This instance of {@link Builder}.
          */
-        public Builder setPollingExecutor(final ExecutorService value) {
+        public Builder setPollingExecutor(final Executor value) {
             _pollingExecutor = value;
             return this;
         }
