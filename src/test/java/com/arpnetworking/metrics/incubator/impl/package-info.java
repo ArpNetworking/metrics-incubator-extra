@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 Inscope Metrics, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,6 @@
  */
 
 @ParametersAreNonnullByDefault
-package com.arpnetworking.metrics.incubator;
+package com.arpnetworking.metrics.incubator.impl;
 
 import javax.annotation.ParametersAreNonnullByDefault;

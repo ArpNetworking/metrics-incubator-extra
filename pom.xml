@@ -18,7 +18,7 @@
   <parent>
     <groupId>com.arpnetworking.build</groupId>
     <artifactId>arpnetworking-parent-pom</artifactId>
-    <version>1.1.5</version>
+    <version>1.1.10</version>
     <relativePath />
   </parent>
 
@@ -68,14 +68,14 @@
 
   <properties>
     <!-- Dependency versions -->
-    <arpnetworking.commons.version>1.16.0</arpnetworking.commons.version>
+    <arpnetworking.commons.version>1.18.0</arpnetworking.commons.version>
     <findbugs.annotations.version>3.0.1</findbugs.annotations.version>
-    <guava.version>23.4-jre</guava.version>
-    <hamcrest.version>2.0.0.0</hamcrest.version>
-    <jsr305.version>3.0.1</jsr305.version>
+    <guava.version>25.1-jre</guava.version>
+    <hamcrest.version>2.1</hamcrest.version>
+    <jsr305.version>3.0.2</jsr305.version>
     <junit.version>4.12</junit.version>
-    <metrics.client.version>0.10.0</metrics.client.version>
-    <mockito.version>2.12.0</mockito.version>
+    <metrics.client.version>0.10.1</metrics.client.version>
+    <mockito.version>2.23.4</mockito.version>
     <slf4j.version>1.7.25</slf4j.version>
 
     <!-- Code Coverage -->
@@ -151,10 +151,19 @@
       <artifactId>junit</artifactId>
       <version>${junit.version}</version>
       <scope>test</scope>
+      <exclusions>
+        <!-- TODO(ville): Remove once JUnit depends on modern hamcrest; see:
+            http://hamcrest.org/JavaHamcrest/distributables
+        -->
+        <exclusion>
+          <groupId>org.hamcrest</groupId>
+          <artifactId>hamcrest-core</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.hamcrest</groupId>
-      <artifactId>java-hamcrest</artifactId>
+      <artifactId>hamcrest</artifactId>
       <version>${hamcrest.version}</version>
       <scope>test</scope>
     </dependency>
