@@ -29,7 +29,7 @@
   <name>Metrics client incubator</name>
   <description>Incubator for features that will later be built into the core metrics client.</description>
   <url>https://github.com/ArpNetworking/metrics-incubator-extra</url>
-  <version>0.6.3-SNAPSHOT</version>
+  <version>0.6.3</version>
 
   <licenses>
     <license>
@@ -63,7 +63,7 @@
     <connection>scm:git:git@github.com:arpnetworking/metrics-incubator-extra.git</connection>
     <developerConnection>scm:git:git@github.com:arpnetworking/metrics-incubator-extra.git</developerConnection>
     <url>https://github.com/arpnetworking/metrics-incubator-extra</url>
-    <tag>HEAD</tag>
+    <tag>incubator-extra-0.6.3</tag>
   </scm>
 
   <properties>
