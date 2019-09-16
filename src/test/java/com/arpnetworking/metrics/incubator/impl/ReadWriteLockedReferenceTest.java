@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Tests for the {@link ReadWriteLockedReference} class.
  *
- * @author Brandon Arp (brandon dot arp at inscopemetrics dot com)
+ * @author Brandon Arp (brandon dot arp at inscopemetrics dot io)
  */
 public class ReadWriteLockedReferenceTest {
 

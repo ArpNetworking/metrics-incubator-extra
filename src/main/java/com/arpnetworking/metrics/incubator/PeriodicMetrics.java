@@ -18,9 +18,9 @@ package com.arpnetworking.metrics.incubator;
 import com.arpnetworking.metrics.Counter;
 import com.arpnetworking.metrics.Metrics;
 import com.arpnetworking.metrics.Timer;
-import com.arpnetworking.metrics.Unit;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 /**
@@ -31,7 +31,7 @@ import java.util.function.Consumer;
  * {@link Metrics}, a {@link Timer} and {@link Counter} will not be bound to the time interval that they were created
  * in; the timers and counters will be recorded in the interval that is open when the timer or counter is closed.
  *
- * @author Brandon Arp (brandon dot arp at inscopemetrics dot com)
+ * @author Brandon Arp (brandon dot arp at inscopemetrics dot io)
  */
 public interface PeriodicMetrics {
     /**
@@ -60,7 +60,7 @@ public interface PeriodicMetrics {
      * @param duration The duration of the timer.
      * @param unit The time unit of the timer.
      */
-    void recordTimer(String name, long duration, Optional<Unit> unit);
+    void recordTimer(String name, long duration, Optional<TimeUnit> unit);
 
     /**
      * Set the specified gauge reading.
@@ -71,28 +71,10 @@ public interface PeriodicMetrics {
     void recordGauge(String name, double value);
 
     /**
-     * Set the specified gauge reading with a well-known unit.
-     *
-     * @param name The name of the gauge.
-     * @param value The reading on the gauge
-     * @param unit The unit of the value.
-     */
-    void recordGauge(String name, double value, Optional<Unit> unit);
-
-    /**
      * Set the specified gauge reading.
      *
      * @param name The name of the gauge.
      * @param value The reading on the gauge
      */
     void recordGauge(String name, long value);
-
-    /**
-     * Set the specified gauge reading with a well-known unit.
-     *
-     * @param name The name of the gauge.
-     * @param value The reading on the gauge
-     * @param unit The unit of the value.
-     */
-    void recordGauge(String name, long value, Optional<Unit> unit);
 }

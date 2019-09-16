@@ -17,7 +17,6 @@ package com.arpnetworking.metrics.incubator.impl;
 
 import com.arpnetworking.metrics.Metrics;
 import com.arpnetworking.metrics.MetricsFactory;
-import com.arpnetworking.metrics.Unit;
 import com.arpnetworking.metrics.impl.TsdMetricsFactory;
 import com.arpnetworking.metrics.incubator.PeriodicMetrics;
 import com.google.common.collect.Lists;
@@ -31,6 +30,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -39,7 +39,7 @@ import java.util.function.Supplier;
  *
  * NOTE: This class must be scheduled with an executor in order for metrics to be recorded.
  *
- * @author Brandon Arp (brandon dot arp at inscopemetrics dot com)
+ * @author Brandon Arp (brandon dot arp at inscopemetrics dot io)
  */
 public final class TsdPeriodicMetrics implements PeriodicMetrics, Runnable {
     @Override
@@ -53,7 +53,7 @@ public final class TsdPeriodicMetrics implements PeriodicMetrics, Runnable {
     }
 
     @Override
-    public void recordTimer(final String name, final long duration, final Optional<Unit> unit) {
+    public void recordTimer(final String name, final long duration, final Optional<TimeUnit> unit) {
         _currentPeriodicMetrics.readLocked(m -> m.setTimer(name, duration, unit.orElse(null)));
     }
 
@@ -63,18 +63,8 @@ public final class TsdPeriodicMetrics implements PeriodicMetrics, Runnable {
     }
 
     @Override
-    public void recordGauge(final String name, final double value, final Optional<Unit> unit) {
-        _currentPeriodicMetrics.readLocked(m -> m.setGauge(name, value, unit.orElse(null)));
-    }
-
-    @Override
     public void recordGauge(final String name, final long value) {
         _currentPeriodicMetrics.readLocked(m -> m.setGauge(name, value));
-    }
-
-    @Override
-    public void recordGauge(final String name, final long value, final Optional<Unit> unit) {
-        _currentPeriodicMetrics.readLocked(m -> m.setGauge(name, value, unit.orElse(null)));
     }
 
     @Override
@@ -113,7 +103,7 @@ public final class TsdPeriodicMetrics implements PeriodicMetrics, Runnable {
     /**
      * Implementation of the Builder pattern for the {@link TsdPeriodicMetrics} class.
      *
-     * @author Brandon Arp (brandon dot arp at inscopemetrics dot com)
+     * @author Brandon Arp (brandon dot arp at inscopemetrics dot io)
      */
     public static final class Builder implements com.arpnetworking.commons.builder.Builder<TsdPeriodicMetrics> {
         /**
