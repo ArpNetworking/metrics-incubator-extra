@@ -18,7 +18,6 @@ package com.arpnetworking.metrics.incubator.impl;
 import com.arpnetworking.metrics.Counter;
 import com.arpnetworking.metrics.Metrics;
 import com.arpnetworking.metrics.MetricsFactory;
-import com.arpnetworking.metrics.Units;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,11 +28,12 @@ import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Tests for the {@link TsdPeriodicMetrics} class.
  *
- * @author Brandon Arp (brandon dot arp at inscopemetrics dot com)
+ * @author Brandon Arp (brandon dot arp at inscopemetrics dot io)
  */
 public class TsdPeriodicMetricsTest {
     @Before
@@ -99,12 +99,12 @@ public class TsdPeriodicMetricsTest {
         final String name = "foo";
         final long value = 1;
 
-        factory.recordTimer(name, value, Optional.of(Units.MILLISECOND));
-        Mockito.verify(metricsMock).setTimer(name, value, Units.MILLISECOND);
+        factory.recordTimer(name, value, Optional.of(TimeUnit.MILLISECONDS));
+        Mockito.verify(metricsMock).setTimer(name, value, TimeUnit.MILLISECONDS);
     }
 
     @Test
-    public void testRecordGaugeLongNoUnit() throws Exception {
+    public void testRecordGaugeLong() throws Exception {
         final Metrics metricsMock = Mockito.mock(Metrics.class);
         Mockito.when(_factory.create()).thenReturn(metricsMock);
         final TsdPeriodicMetrics factory = new TsdPeriodicMetrics.Builder()
@@ -119,22 +119,7 @@ public class TsdPeriodicMetricsTest {
     }
 
     @Test
-    public void testRecordGaugeLongUnit() throws Exception {
-        final Metrics metricsMock = Mockito.mock(Metrics.class);
-        Mockito.when(_factory.create()).thenReturn(metricsMock);
-        final TsdPeriodicMetrics factory = new TsdPeriodicMetrics.Builder()
-                .setMetricsFactory(_factory)
-                .build();
-
-        final String name = "foo";
-        final long value = 1;
-
-        factory.recordGauge(name, value, Optional.of(Units.BIT));
-        Mockito.verify(metricsMock).setGauge(name, value, Units.BIT);
-    }
-
-    @Test
-    public void testRecordGaugeDoubleNoUnit() throws Exception {
+    public void testRecordGaugeDouble() throws Exception {
         final Metrics metricsMock = Mockito.mock(Metrics.class);
         Mockito.when(_factory.create()).thenReturn(metricsMock);
         final TsdPeriodicMetrics factory = new TsdPeriodicMetrics.Builder()
@@ -146,21 +131,6 @@ public class TsdPeriodicMetricsTest {
 
         factory.recordGauge(name, value);
         Mockito.verify(metricsMock).setGauge(name, value);
-    }
-
-    @Test
-    public void testRecordGaugeDoubleUnit() throws Exception {
-        final Metrics metricsMock = Mockito.mock(Metrics.class);
-        Mockito.when(_factory.create()).thenReturn(metricsMock);
-        final TsdPeriodicMetrics factory = new TsdPeriodicMetrics.Builder()
-                .setMetricsFactory(_factory)
-                .build();
-
-        final String name = "foo";
-        final double value = 1;
-
-        factory.recordGauge(name, value, Optional.of(Units.BIT));
-        Mockito.verify(metricsMock).setGauge(name, value, Units.BIT);
     }
 
     @Test

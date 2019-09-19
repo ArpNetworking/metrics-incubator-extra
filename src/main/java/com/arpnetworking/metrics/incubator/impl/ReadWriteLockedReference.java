@@ -28,7 +28,7 @@ import java.util.function.Consumer;
  *
  * @param <T> The type of object protected by the locks.
  *
- * @author Brandon Arp (brandon dot arp at inscopemetrics dot com)
+ * @author Brandon Arp (brandon dot arp at inscopemetrics dot io)
  */
 public final class ReadWriteLockedReference<T> {
     /**
