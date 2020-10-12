@@ -72,7 +72,7 @@
     <guava.version>29.0-jre</guava.version>
     <hamcrest.version>2.2</hamcrest.version>
     <jsr305.version>3.0.2</jsr305.version>
-    <junit.version>4.13</junit.version>
+    <junit.version>4.13.1</junit.version>
     <metrics.client.version>0.11.2</metrics.client.version>
     <mockito.version>2.23.4</mockito.version>
     <slf4j.version>1.7.30</slf4j.version>
