@@ -18,7 +18,7 @@
   <parent>
     <groupId>com.arpnetworking.build</groupId>
     <artifactId>arpnetworking-parent-pom</artifactId>
-    <version>2.0.5</version>
+    <version>3.0.9</version>
     <relativePath />
   </parent>
 
@@ -68,15 +68,15 @@
 
   <properties>
     <!-- Dependency versions -->
-    <arpnetworking.commons.version>1.18.3</arpnetworking.commons.version>
-    <guava.version>29.0-jre</guava.version>
+    <arpnetworking.commons.version>2.0.4</arpnetworking.commons.version>
+    <guava.version>31.1-jre</guava.version>
     <hamcrest.version>2.2</hamcrest.version>
     <jsr305.version>3.0.2</jsr305.version>
-    <junit.version>4.13</junit.version>
-    <metrics.client.version>0.11.2</metrics.client.version>
-    <mockito.version>2.23.4</mockito.version>
-    <slf4j.version>1.7.30</slf4j.version>
-    <spotbugs.annotations.version>4.0.3</spotbugs.annotations.version>
+    <junit.version>4.13.2</junit.version>
+    <metrics.client.version>0.12.0</metrics.client.version>
+    <mockito.version>4.7.0</mockito.version>
+    <slf4j.version>1.7.36</slf4j.version>
+    <spotbugs.annotations.version>4.7.1</spotbugs.annotations.version>
 
     <!-- Code Coverage -->
     <jacoco.check.line.coverage>1.0</jacoco.check.line.coverage>
@@ -109,6 +109,27 @@
         <groupId>com.rimerosolutions.maven.plugins</groupId>
         <artifactId>wrapper-maven-plugin</artifactId>
         <inherited>false</inherited>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>analyze</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>analyze-only</goal>
+            </goals>
+            <configuration>
+              <failOnWarning>true</failOnWarning>
+              <ignoreNonCompile>true</ignoreNonCompile>
+              <ignoredDependencies>
+                <ignoredDependency>com.arpnetworking.build:build-resources:jar:*</ignoredDependency>
+                <ignoredDependency>com.github.spotbugs:spotbugs-annotations:jar:*</ignoredDependency>
+              </ignoredDependencies>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

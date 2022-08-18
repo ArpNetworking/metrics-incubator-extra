@@ -19,6 +19,7 @@ import com.arpnetworking.metrics.Counter;
 import com.arpnetworking.metrics.Metrics;
 import com.arpnetworking.metrics.MetricsFactory;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Answers;
@@ -38,7 +39,12 @@ import java.util.concurrent.TimeUnit;
 public class TsdPeriodicMetricsTest {
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        _mocks = MockitoAnnotations.openMocks(this);
+    }
+
+    @After
+    public void after() throws Exception {
+        _mocks.close();
     }
 
     @Test
@@ -172,4 +178,5 @@ public class TsdPeriodicMetricsTest {
     @Mock(answer = Answers.RETURNS_MOCKS)
     private MetricsFactory _factory;
 
+    private AutoCloseable _mocks;
 }
