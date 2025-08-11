@@ -76,7 +76,7 @@
     <metrics.client.version>0.13.1</metrics.client.version>
     <mockito.version>5.18.0</mockito.version>
     <slf4j.version>2.0.17</slf4j.version>
-    <spotbugs.annotations.version>4.9.3</spotbugs.annotations.version>
+    <spotbugs.annotations.version>4.9.4</spotbugs.annotations.version>
 
     <!-- Code Coverage -->
     <jacoco.check.line.coverage>1.0</jacoco.check.line.coverage>
